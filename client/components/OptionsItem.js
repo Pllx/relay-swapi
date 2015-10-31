@@ -3,6 +3,7 @@ var React = require('react');
 var OptionsItem = React.createClass({
 
     selectCurrent : function() {
+      //console.log('Selected',this.props.option);
       {this.props.updateSelected(this.props.option)}
     },
 

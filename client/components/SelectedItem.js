@@ -5,15 +5,13 @@ var SelectedItem = React.createClass({
   render : function() {
     return (
       <div style={style}>
-        Home world : {this.props.selected.home}
+        Home world : {this.props.selected.homeworld}
         <br/>
-        Species : {this.props.selected.speciesName}
+        Species : {this.props.selected.species}
         <br/>
-        Birth year : {this.props.selected.birth_year}
+        Birth year : {this.props.selected.birthyear}
         <br/>
         Gender : {this.props.selected.gender}
-        <br/>
-        Height : {this.props.selected.height}
       </div>
     )
   }

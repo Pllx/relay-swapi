@@ -3,6 +3,7 @@ var $ = require('jQuery');
 
 var SelectedView = require('./SelectedView');
 var OptionsView = require('./OptionsView');
+var FriendsView = require('./FriendsView');
 var Header = require('./Header');
 var Footer = require('./Footer');
 
@@ -11,20 +12,13 @@ var Page = React.createClass({
     // Helper methods:
     updateSelected: function(selection) {
       console.log('Ouch!!', selection.name);
-      this.setState({
-        selected : selection
-      });
-      $.get(selection.homeworld, function(home) {
-        this.state.selected.home = home.name;
-        this.setState({});
-      }.bind(this));
-
-      if(!this.state.species[selection.species]) {
-        $.get(selection.species, function(species) {
-          this.state.selected.speciesName = species.name;
-          this.setState({});
-        }.bind(this));
-      }
+      // $.get('/friends', {name: selection.name}, function(friends) {
+      //   console.log('received friends', friends);
+      //   this.setState({
+      //     selected : selection,
+      //     friends : friends,
+      //   });
+      // }.bind(this));
 
     },
 
@@ -33,58 +27,34 @@ var Page = React.createClass({
       return ({
         selected : {},
         options : [],
-        species : {}
+        friends : [],
       });
     },
 
     componentDidMount : function() {
       console.log('in component did mount');
-      // $.get('http://pokeapi.co/api/v1/pokedex/', function(data){
-      //   console.log('pokemon',data.objects[0].pokemon);
-      // });
-
-      // people, planets, species, vehicles, films
-      $.get('http://swapi.co/api/people/', function(people1) {
-
-        //get page 1 of people
-        this.setState({
-          selected : people1.results[0],
-          options: people1.results
-        });
-
-        //get page 2 of people
-        $.get(people1.next, function(people2) {
-          console.log(people2.results);
-          this.state.options = this.state.options.concat(people2.results);
-          this.setState({});
-          // console.log('new options',this.state.options);
-
-          //get page 3
-          $.get(people2.next, function(people3) {
-            this.state.options = this.state.options.concat(people3.results);
-            this.setState({});
-          }.bind(this));
-
-        }.bind(this));
-
-        // set default selected to Luke
-        $.get(people1.results[0].homeworld, function(home) {
-          this.state.selected.home = home.name;
-          this.setState({});
-        }.bind(this));
-
-        $.get(people1.results[0].species, function(species) {
-          console.log('species',species.name);
-          this.state.selected.speciesName = species.name;
-          this.setState({});
-        }.bind(this));
-
-      }.bind(this));
+      //get from database
+      // $.get('/users', function(users) {
+      //   console.log('received users', users);
+      //   this.setState({
+      //     selected : users[0],
+      //     options : users
+      //   });
+      //
+      //   $.get('/friends', {name: users[0].name}, function(friends) {
+      //     console.log('received friends', friends);
+      //     this.setState({
+      //       friends : friends
+      //     });
+      //   }.bind(this));
+      //
+      // }.bind(this));
     },
 
     render : function() {
+      //            <OptionsView options={this.state.options} updateSelected={this.updateSelected} />
       return (
-        <div id="container" style={style}>
+        <div id="container" style={styles.page}>
 
           <Header />
           <div id="navbar"></div>
@@ -92,6 +62,10 @@ var Page = React.createClass({
             <br /><br />
             <SelectedView selected={this.state.selected} />
             <br />
+            <h3 style={styles.sectionTitle}>Friends</h3>
+            <FriendsView friends={this.state.friends} updateSelected={this.updateSelected} />
+            <br />
+            <h3 style={styles.sectionTitle}>Users</h3>
             <OptionsView options={this.state.options} updateSelected={this.updateSelected} />
           </div>
 
@@ -101,8 +75,17 @@ var Page = React.createClass({
   }
 );
 
-var style = {
-  backgroundColor : '#151515'
+var styles = {
+  page : {
+    backgroundColor : '#151515'
+  },
+  sectionTitle : {
+    color: 'white',
+    width: '70%',
+    textAlign : 'center',
+    margin: '0 auto'
+  }
+
 };
 
 module.exports = Page;
