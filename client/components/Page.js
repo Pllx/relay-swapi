@@ -12,6 +12,19 @@ var Page = React.createClass({
     // Helper methods:
     updateSelected: function(selection) {
       console.log('Ouch!!', selection.name);
+
+//'query queryUser($name:String){getUserPorcupinus(name: $name){name, birthyear, homeworld}}',
+      //test createGetters singular:
+      var user = {'name' : selection.name};
+      var query = {
+        'query' : 'query queryUser{getUser{name}}',
+        'variables': {'name':String(user.name)}
+      };
+      $.post('/', query, function(response) {
+        console.log('GOT RESPONSE FROM GET USER',response);
+      });
+
+
       // $.get('/friends', {name: selection.name}, function(friends) {
       //   console.log('received friends', friends);
       //   this.setState({
@@ -34,21 +47,21 @@ var Page = React.createClass({
     componentDidMount : function() {
       console.log('in component did mount');
       //get from database
-      // $.get('/users', function(users) {
-      //   console.log('received users', users);
-      //   this.setState({
-      //     selected : users[0],
-      //     options : users
-      //   });
-      //
-      //   $.get('/friends', {name: users[0].name}, function(friends) {
-      //     console.log('received friends', friends);
-      //     this.setState({
-      //       friends : friends
-      //     });
-      //   }.bind(this));
-      //
-      // }.bind(this));
+      $.get('/users', function(users) {
+        console.log('received users', users);
+        this.setState({
+          selected : users[0],
+          options : users
+        });
+
+        $.get('/friends', {name: users[0].name}, function(friends) {
+          console.log('received friends', friends);
+          this.setState({
+            friends : friends
+          });
+        }.bind(this));
+
+      }.bind(this));
     },
 
     render : function() {
