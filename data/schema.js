@@ -1,3 +1,5 @@
+import Sequelize from 'sequelize';
+
 import {
   GraphQLObjectType,
   GraphQLSchema,
@@ -5,6 +7,20 @@ import {
   GraphQLString,
   GraphQLList
 } from 'graphql';
+
+let pgURI = 'postgres://localhost/starwars';
+let sequelize = new Sequelize(pgURI);
+
+let User = sequelize.define('users', {
+  name : {type : Sequelize.STRING},
+  species : {type : Sequelize.STRING},
+  gender : {type : Sequelize.STRING},
+  birthyear : {type : Sequelize.STRING},
+  homeworld : {type : Sequelize.STRING}
+});
+
+User.sync();
+User.belongsToMany(User, {through: 'friends_table', as: 'friends'});
 
 let userType = new GraphQLObjectType({
     name: 'user', //TODO: Force user to give same name as table name
@@ -32,6 +48,45 @@ let Query = new GraphQLObjectType({
     // Needs to take in userType, blogpostType etc
     // so it is connected to schema
     presetFunctions:{type: userType},
+    getUser:{
+      type: userType,
+      description: 'get user object',
+      args: {
+        name:{type: GraphQLString}
+      },
+      resolve: (root, args/*{name}*/) => {
+        console.log('GetUserQuery got args: ', args);
+        // return {
+        //   name : 'Bobo',
+        //   age: 23
+        // }
+        User
+          .findOne({where: args})
+          .then(function(user) {
+            console.log('getUser found', user);
+          });
+      }
+    },
+    getUsers:{
+      type: new GraphQLList(userType),
+      description: 'get user object',
+      args: {
+        name:{type: GraphQLString}
+      },
+      resolve: (root, args) => {
+        console.log('GetUsersQuery got args: ', args);
+        return User
+          .findAll()
+          .then(function(users) {
+            console.log('getUsers found', users);
+            return users;
+          });
+        // return {
+        //   name : 'Bobo',
+        //   age: 23
+        // }
+      }
+    },
   }
 });
 

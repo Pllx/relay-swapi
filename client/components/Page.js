@@ -20,6 +20,16 @@ var Page = React.createClass({
       //   });
       // }.bind(this));
 
+      var query = {
+             //'query' : 'query queryUser{getUser(name:"'+user.name+'"){name, age}}',
+        'query' : 'query queryUser($name:String){getUser(name: $name){name}}',
+        'variables': {'name':String(selection.name)}
+      }
+      $.post('/', query, function(response){
+        console.log(response);
+        //console.dir(response.data);
+      });
+
     },
 
     // Lifecycle methods:
@@ -34,6 +44,15 @@ var Page = React.createClass({
     componentDidMount : function() {
       console.log('in component did mount');
       //get from database
+
+      var query = {
+        'query' : 'query queryUser{getUsers{name,species,homeworld}}',
+      };
+      $.post('/', query, function(response){
+        console.log(response);
+        //console.dir(response.data);
+      });
+
       // $.get('/users', function(users) {
       //   console.log('received users', users);
       //   this.setState({

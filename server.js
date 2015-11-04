@@ -1,36 +1,36 @@
-//import Sequelize from 'sequelize';
-
-import Nala from './Nala/nala'
 import express from 'express';
 import bodyParser from 'body-parser';
 import Schema from './data/schema';
+import {graphql} from 'graphql';
 
-let pgURI = 'postgres://localhost/starwars'
-//let sequelize = new Sequelize(pgURI);
+async function graphQLHandler(req, res) {
 
-// let User = sequelize.define('users', {
-//   name : {type : Sequelize.STRING},
-//   species : {type : Sequelize.STRING},
-//   gender : {type : Sequelize.STRING},
-//   birthyear : {type : Sequelize.STRING},
-//   homeworld : {type : Sequelize.STRING}
-// });
-//
-// User.sync();
-// User.belongsToMany(User, {through: 'friends_table', as: 'friends'});
+  console.log('you in gql handler!');
+  const {query, variables = {}} = req.body;
+  const result = await graphql(
+    Schema,
+    query,
+    {db: req.db},
+    variables
+  );
+  console.log('server.js : gqlhandler, result', result);
+  return res.send(result);
+}
 
 let app = express();
 
 app.use(express.static('client'));
 app.use(bodyParser.urlencoded());
 
-let graphQLHandler = Nala(Schema, pgURI);
+//let graphQLHandler = Nala(Schema, pgURI);
 
-app.get('/', graphQLHandler);
-// app.use('/character', function(req,res){
-//   console.log('Request to character');
-// });
-//
+app.use('/', graphQLHandler);
+app.use('/character', function(req,res){
+  console.log('Request to character');
+});
+
+
+
 // app.get('/users', function(req, res) {
 //   //console.log(req);
 //   //console.log('got get request to users');
@@ -41,21 +41,21 @@ app.get('/', graphQLHandler);
 //       res.send(users);
 //     });
 // });
-//
-// app.get('/friends', function(req, res) {
-//   console.log(req.query);
-//   User
-//     .findOne({where: req.query})
-//     .then(function (user) {
-//       console.log('user is', user);
-//       user
-//         .getFriends({})
-//         .then(function(friends) {
-//           console.log('got friends', friends);
-//           res.send(friends);
-//         });
-//     });
-// });
+
+app.get('/friends', function(req, res) {
+  console.log(req.query);
+  User
+    .findOne({where: req.query})
+    .then(function (user) {
+      console.log('user is', user);
+      user
+        .getFriends({})
+        .then(function(friends) {
+          console.log('got friends', friends);
+          res.send(friends);
+        });
+    });
+});
 
 app.listen(process.env.PORT || 3000, function(){
   console.log('Server is listening on port 3000');
