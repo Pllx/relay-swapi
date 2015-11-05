@@ -17,20 +17,21 @@ var Page = React.createClass({
       //test createGetters singular:
       var user = {'name' : selection.name};
       var query = {
-        'query' : 'query queryUser($name:String){getUser(name: $name){name,homeworld}}',
+        'query' : 'query queryUser($name:String){getUsers(name: $name){name,birthyear,homeworld,friends{name, homeworld}}}',
         'variables': {'name':String(selection.name)}
       };
       $.post('/', query, function(response) {
         console.log('GOT RESPONSE FROM GET USER',response);
       });
 
-      var friendsQuery = {
-
-      };
-
-      $.post('/', friendsQuery, function(response) {
-        console.log(response);
-      });
+      // var friendsQuery = {
+      //   'query' : 'query queryUser($name:String){getUser(name: $name){name,homeworld}}',
+      //   'variables': {'name':String(selection.name)}
+      // };
+      //
+      // $.post('/', friendsQuery, function(response) {
+      //   console.log(response);
+      // });
 
       // $.get('/friends', {name: selection.name}, function(friends) {
       //   console.log('received friends', friends);
