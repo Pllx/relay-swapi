@@ -31,8 +31,8 @@ function Nala(schema,uri){
   //TODO: eventually parse uri for different dbs
   var sequelize = new Sequelize(uri);
   console.log(schema);
-  var QUERY_FIELDS = schema._schemaConfig.query._fields;
-  var MUTATION_FIELDS = schema._schemaConfig.mutation._fields;
+  var QUERY_FIELDS = schema._queryType._fields;//schema._schemaConfig.query._fields;
+  var MUTATION_FIELDS = schema._mutationType._fields;//schema._schemaConfig.mutation._fields;
 
   //extract user defined GraphQL schemas that we want to convert into sequelize schemas
   //we filter out the non-user defined ones by comparing them to defaultNames

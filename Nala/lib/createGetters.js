@@ -33,13 +33,18 @@ function CreateGetters(modelNames, typeMap, queryFields, tables){
 
     queryFields[getterName].args = args;
 
-    queryFields[getterName].resolve = (root, args)=>{
+    queryFields[getterName].resolve = (root, args, test)=>{
+      console.log('yo im in the created getter singular');
+      console.log('dis my args', args);
+      //console.log('dis my test', test);
+
       var selectorObj= {};
       for (var key in args){
         if (args[key] !== undefined){
           selectorObj[key]= args[key];
         }
       }
+      console.log('dis my parsed args', selectorObj);
       return tables[capitalizedName]
           .findOne({
             where: selectorObj //e.g. { name : 'Ken' }
@@ -54,6 +59,7 @@ function CreateGetters(modelNames, typeMap, queryFields, tables){
     queryFields[getterNamePlural].args = args;
 
     queryFields[getterNamePlural].resolve = (root, args)=>{
+      console.log('yo im in the created getter plural');
       var selectorObj= {};
       for (var key in args){
         if (args[key] !== undefined){
