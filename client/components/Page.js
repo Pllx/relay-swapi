@@ -17,12 +17,17 @@ var Page = React.createClass({
       //test createGetters singular:
       var user = {'name' : selection.name};
       var query = {
-        'query' : 'query queryUser($name:String){getUsers(name: $name){name,birthyear,homeworld,friends{name, homeworld}}}',
+        'query' : 'query queryUser($name:String){getUser(name: $name){name,gender,species,birthyear,homeworld,friends{name, homeworld}}}',
         'variables': {'name':String(selection.name)}
       };
       $.post('/', query, function(response) {
         console.log('GOT RESPONSE FROM GET USER',response);
-      });
+        var user = response.data.getUser;
+        this.setState({
+          selected : user,
+          friends : user.friends
+        });
+      }.bind(this));
 
       // var friendsQuery = {
       //   'query' : 'query queryUser($name:String){getUser(name: $name){name,homeworld}}',
@@ -55,20 +60,17 @@ var Page = React.createClass({
     componentDidMount : function() {
       console.log('in component did mount');
       //get from database
-      $.get('/users', function(users) {
-        console.log('received users', users);
+      var query = {
+        'query' : 'query queryUser{getUsers{name,gender,species,birthyear,homeworld,friends{name, homeworld}}}',
+      };
+      $.post('/', query, function(response) {
+        console.log('Retrieving all users',response.data);
+        var users = response.data.getUsers;
         this.setState({
           selected : users[0],
-          options : users
+          options : users,
+          friends : users[0].friends
         });
-
-        $.get('/friends', {name: users[0].name}, function(friends) {
-          console.log('received friends', friends);
-          this.setState({
-            friends : friends
-          });
-        }.bind(this));
-
       }.bind(this));
     },
 
