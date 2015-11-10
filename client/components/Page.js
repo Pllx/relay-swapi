@@ -1,3 +1,4 @@
+require('babel/register');
 var React = require('react');
 var $ = require('jQuery');
 
@@ -13,11 +14,22 @@ var Page = React.createClass({
     updateSelected: function(selection) {
       console.log('Ouch!!', selection.name);
 
-//'query queryUser($name:String){getUserPorcupinus(name: $name){name, birthyear, homeworld}}',
-      //test createGetters singular:
       var user = {'name' : selection.name};
       var query = {
-        'query' : 'query queryUser($name:String){getUser(name: $name){name,gender,species,birthyear,homeworld,friends{name, homeworld}}}',
+        'query' : `
+          query queryUser($name:String){
+            getUser(name: $name){
+              name,
+              gender,
+              species,
+              birthyear,
+              homeworld,
+              friends{
+                name,
+                homeworld
+              }
+            }
+          }`,
         'variables': {'name':String(selection.name)}
       };
       $.post('/', query, function(response) {
@@ -28,24 +40,6 @@ var Page = React.createClass({
           friends : user.friends
         });
       }.bind(this));
-
-      // var friendsQuery = {
-      //   'query' : 'query queryUser($name:String){getUser(name: $name){name,homeworld}}',
-      //   'variables': {'name':String(selection.name)}
-      // };
-      //
-      // $.post('/', friendsQuery, function(response) {
-      //   console.log(response);
-      // });
-
-      // $.get('/friends', {name: selection.name}, function(friends) {
-      //   console.log('received friends', friends);
-      //   this.setState({
-      //     selected : selection,
-      //     friends : friends,
-      //   });
-      // }.bind(this));
-
     },
 
     // Lifecycle methods:
@@ -61,7 +55,19 @@ var Page = React.createClass({
       console.log('in component did mount');
       //get from database
       var query = {
-        'query' : 'query queryUser{getUsers{name,gender,species,birthyear,homeworld,friends{name, homeworld}}}',
+        'query' : `query queryUser {
+                        getUsers {
+                          name,
+                          gender,
+                          species,
+                          birthyear,
+                          homeworld,
+                          friends {
+                            name,
+                            homeworld
+                          }
+                        }
+                      }`,
       };
       $.post('/', query, function(response) {
         console.log('Retrieving all users',response.data);

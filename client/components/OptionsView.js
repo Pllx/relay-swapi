@@ -1,5 +1,4 @@
 var React = require('react');
-//var OptionsRow = require('./OptionsRow');
 var OptionsItem = require('./OptionsItem');
 
 var OptionsView = React.createClass({

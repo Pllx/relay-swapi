@@ -30,7 +30,7 @@ async function graphQLHandler(req, res, schema){
 function Nala(schema,uri){
   //TODO: eventually parse uri for different dbs
   var sequelize = new Sequelize(uri);
-  console.log(schema);
+  //console.log(schema);
   var QUERY_FIELDS = schema._queryType._fields;//schema._schemaConfig.query._fields;
   var MUTATION_FIELDS = schema._mutationType._fields;//schema._schemaConfig.mutation._fields;
 
