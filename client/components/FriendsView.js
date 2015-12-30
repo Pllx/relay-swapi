@@ -13,12 +13,10 @@ var FriendsView = React.createClass({
     render : function() {
       //console.log('options: ', this.props.options);
       var friends = this.props.friends.map(function(elem, index){
+        console.log(elem);
         return <FriendsItem friend={elem} updateSelected={this.props.updateSelected} key={index} />;
       }.bind(this));
 
-      // <div style={style}>
-      //   {friends}
-      // </div>
     console.log('friends', this.props.friends);
       return (
         <div style={style}>

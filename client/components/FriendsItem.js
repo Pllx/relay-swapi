@@ -35,3 +35,7 @@ var style = {
 };
 
 module.exports = FriendsItem;
+
+// module.exports = Relay.createContainer(FriendsItem, {
+//
+// });

@@ -6,6 +6,12 @@ import {
   GraphQLList
 } from 'graphql';
 
+//import Relay from 'relay';
+
+// var {nodeInterface, nodeField} = nodeDefinitions(
+//
+// );
+
 let userType = new GraphQLObjectType({
     name: 'user', //TODO: Force user to give same name as table name
     description: 'this is the user type',
